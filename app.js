@@ -36,6 +36,7 @@ const logPath = path.join(__dirname, 'log', 'access.log');
 const port = process.env.PORT;
 const host = process.env.HOST;
 
+//logs middleware. Hopinng to create seperate class outSide app.js
 class TerminalStream extends Writable {
   write(line) {
     // here you send the log line to wherever you need
@@ -82,7 +83,7 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/carts/', carts);
 // app.use(avengers);
-app.use('/api/avengers', avengers);
+app.use('/api/products', avengers);
 
 app.use('/api/currency', currency);
 
