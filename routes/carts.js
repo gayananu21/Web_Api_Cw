@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
     category: req.body.category,
     price: req.body.price,
     imgUrl: req.body.imgUrl,
-    description:req.body.description
+    description: req.body.description,
 
   });
 
@@ -69,12 +69,12 @@ router.post('/', async (req, res) => {
 
 router.post('/myCart', async (req, res) => {
   try {
-    const avengersCart = await Cart.find({ userId: req.body.userId })
+    const product = await Cart.find({ userId: req.body.userId })
       .sort({ name: 'asc' })
       .select({
         name: 1, likeCount: 1, _id: 1, imgUrl: 1, movies: 1,
       });
-    return res.send(avengersCart);
+    return res.send(product);
   } catch (ex) {
     return res.status(500).send('Error:', ex.message);
   }
@@ -82,14 +82,14 @@ router.post('/myCart', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   const requstedID = req.params.id;
-  const avenger = await Cart.findById(requstedID);
-  if (!avenger) {
+  const product = await Cart.findById(requstedID);
+  if (!product) {
     return res.status(404).send('Requested  Delete id not found');
   }
 
-  const delAvengerCart = await avenger.deleteOne({ requstedID });
+  const delProductCart = await product.deleteOne({ requstedID });
 
-  return res.status(200).send(delAvengerCart);
+  return res.status(200).send(delProductCart);
 });
 
 module.exports = router;

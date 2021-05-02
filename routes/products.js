@@ -16,8 +16,6 @@ require('dotenv').config();
 
 const { SECRET_KEY } = process.env;
 
-
-
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find()
@@ -124,7 +122,6 @@ router.post('', async (req, res) => {
     return res.status(403).send('Forbidden - No authorization');
   }
 
-  
   let newProduct = new Product({
 
     name: req.body.name,
