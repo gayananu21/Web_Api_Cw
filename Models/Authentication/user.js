@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Creating an mongoose schema.
 const userSchema = new mongoose.Schema({
 
   userName: {
@@ -21,7 +22,7 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    minlength: [4, 'Password should contain more than 4 charcters'],
+    minlength: [8, 'Password should contain more than 4 charcters'],
     required: [true, 'Password is required'],
 
   },
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema({
 
 });
 
+// Creating a mongoose model.
 const user = mongoose.model('User', userSchema);
 
 module.exports = user;

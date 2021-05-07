@@ -7,11 +7,13 @@
 /* eslint-disable max-len */
 const express = require('express');
 const bcrypt = require('bcrypt');
-const User = require('../Models/user');
+const User = require('../../Models/Authentication/user');
+const { addUserValidaion } = require('../../Middlewares/Validations/users/user.validation');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+// Registering a new User
+router.post('/', addUserValidaion, async (req, res) => {
   if (!req.body.name) {
     // return res.status(400).send("Bad Request: Please add avenger name");
   }
@@ -37,6 +39,7 @@ router.post('/', async (req, res) => {
     }
   }
 
+  // Encrypting the password
   const salt = await bcrypt.genSalt(10);
   const hashedPw = await bcrypt.hash(req.body.password, salt);
 
@@ -45,13 +48,14 @@ router.post('/', async (req, res) => {
     userName: req.body.userName,
     email: req.body.email,
     password: hashedPw,
+    isAdmin: false,
 
   });
 
   try {
     user = await user.save();
     req.body.password;
-    return res.send({
+    return res.status(200).send({
       userName: user.userName,
       email: user.email,
     });

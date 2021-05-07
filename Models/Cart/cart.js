@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
+// Creating an mongoose schema.
+const cartSchema = new mongoose.Schema({
 
   name: {
     type: String,
     required: [true, 'Name is required'],
     minlength: [3, 'Name should contain atleast 3 characters'],
     maxlength: [20, 'Name exceeded maximum number of characters'],
-    unique: [true, 'Name should be unique'],
+    unique: [false],
 
   },
   description: {
@@ -32,14 +33,15 @@ const productSchema = new mongoose.Schema({
     default: 'https://picsum.photos/seed/picsum/200/300',
   },
 
-  isAvailable: {
-    type: Boolean,
-    required: [true, 'Available status required'],
-
+  userId: {
+    type: String,
+    required: [true, 'User id is required'],
+    unique: false,
   },
 
 });
 
-const Product = mongoose.model('Product', productSchema);
+// Creating a mongoose model.
+const Cart = mongoose.model('Cart', cartSchema);
 
-module.exports = Product;
+module.exports = Cart;

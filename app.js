@@ -10,33 +10,26 @@ const helmet = require('helmet');
 
 const mongoose = require('mongoose');
 const cors = require('cors');
+const colors = require('colors');
 
 const app = express();
 app.use(helmet());
 
-const { json } = require('express');
-const fs = require('fs');
-const path = require('path');
 const morgan = require('morgan');
 const rt = require('file-stream-rotator');
 const { Writable } = require('stream');
-const authentication = require('./Middleware/Authentication');
-const sendEmailJob = require('./Middleware/sendEmailJob');
-const avengers = require('./routes/products');
-const home = require('./routes/home');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
-const carts = require('./routes/carts');
+const products = require('./routes/Product/products');
+const home = require('./routes/Home/home');
+const users = require('./routes/Authentication/users');
+const auth = require('./routes/Authentication/auth');
+const carts = require('./routes/Cart/carts');
+const orders = require('./routes/Order/orders');
 require('dotenv').config();
-const currency = require('./routes/currency');
-
-const logPath = path.join(__dirname, 'log', 'access.log');
-// const task = require("./Test/task")
 
 const port = process.env.PORT;
 const host = process.env.HOST;
 
-// logs middleware. Hopinng to create seperate class outSide app.js
+// Generating Logs Middleware.
 class TerminalStream extends Writable {
   write(line) {
     // here you send the log line to wherever you need
@@ -44,10 +37,11 @@ class TerminalStream extends Writable {
   }
 }
 
-const fileWriter = rt.getStream({ filename: 'Logs/Error logs/errors.log', frequency: 'daily', verbose: true });
-const successWriter = rt.getStream({ filename: 'Logs/Success logs/success.log', frequency: 'daily', verbose: true });
+// Saving logs into seperate folders and rotate logs daily.
+const fileWriter = rt.getStream({ filename: 'Middlewares/Logs/Error logs/errors.log', frequency: 'daily', verbose: true });
+const successWriter = rt.getStream({ filename: 'Middlewares/Logs/Success logs/success.log', frequency: 'daily', verbose: true });
 
-// Skip requests that aren't for the homepage
+// Seperating success and error requests using response status code.
 const skipSuccess = (req, res) => res.statusCode < 400; const skipError = (req, res) => res.statusCode >= 400;
 
 // error logging
@@ -71,22 +65,21 @@ mongoose
     useUnifiedTopology: true,
 
   })
-  .then(() => console.log('Connected to db successfully ...'))
-  .catch((err) => console.log('Error has occured while connecting to db', err));
+  .then(() => console.log('Connected to db successfully ...'.green))
+  .catch((err) => console.log('Error has occured while connecting to db'.red, err));
 
 app.use(cors());
 app.use(express.json());
+
+// Declaring routes
 app.use(home);
-// app.use(authentication);
-// app.use(sendEmailJob);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/carts/', carts);
-// app.use(avengers);
-app.use('/api/products', avengers);
+app.use('/api/orders/', orders);
+app.use('/api/products', products);
 
-app.use('/api/currency', currency);
-
+// Declaring listning port.
 module.exports = app.listen(port, () => {
   console.log(`Listening on port:${port}`);
 });

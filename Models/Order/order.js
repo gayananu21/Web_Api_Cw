@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const cartSchema = new mongoose.Schema({
+// Creating an mongoose schema.
+const orderSchema = new mongoose.Schema({
 
   name: {
     type: String,
@@ -34,11 +35,24 @@ const cartSchema = new mongoose.Schema({
 
   userId: {
     type: String,
+    required: [true, 'Description is required'],
+    unique: false,
+  },
+
+  orderId: {
+    type: String,
+    required: [true, 'Description is required'],
+    unique: false,
+  },
+  status: {
+    type: String,
+    required: [true, 'Description is required'],
     unique: false,
   },
 
 });
 
-const Cart = mongoose.model('Cart', cartSchema);
+// Creating a mongoose model.
+const Order = mongoose.model('Order', orderSchema);
 
-module.exports = Cart;
+module.exports = Order;

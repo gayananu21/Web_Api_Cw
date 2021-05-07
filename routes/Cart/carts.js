@@ -8,9 +8,10 @@
 const express = require('express');
 
 const router = express.Router();
-const Cart = require('../Models/cart');
+const Cart = require('../../Models/Cart/cart');
 require('dotenv').config();
 
+// Adding a new Cart item
 router.post('/', async (req, res) => {
   let cartProduct = new Cart({
 
@@ -25,7 +26,7 @@ router.post('/', async (req, res) => {
 
   try {
     cartProduct = await cartProduct.save();
-    return res.send(cartProduct);
+    return res.status(200).send(cartProduct);
   } catch (err) {
     for (name in err.errors) {
       console.log(err.errors[name].message);
@@ -67,6 +68,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Filtering cart item according to userId
 router.post('/myCart', async (req, res) => {
   try {
     const product = await Cart.find({ userId: req.body.userId })
@@ -74,17 +76,22 @@ router.post('/myCart', async (req, res) => {
       .select({
         name: 1, likeCount: 1, _id: 1, imgUrl: 1, movies: 1,
       });
-    return res.send(product);
+    return res.status(200).send(product);
   } catch (ex) {
     return res.status(500).send('Error:', ex.message);
   }
 });
 
+// Deleting cart item
 router.delete('/:id', async (req, res) => {
   const requstedID = req.params.id;
-  const product = await Cart.findById(requstedID);
-  if (!product) {
-    return res.status(404).send('Requested  Delete id not found');
+  try {
+    const product = await Cart.findById(requstedID);
+    if (!product) {
+      return res.status(404).send('Requested  Delete id not found');
+    }
+  } catch (ex) {
+    return res.status(500).send('Error:', ex.message);
   }
 
   const delProductCart = await product.deleteOne({ requstedID });
