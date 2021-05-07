@@ -28,6 +28,7 @@ require('dotenv').config();
 
 const port = process.env.PORT;
 const host = process.env.HOST;
+const { MONGO_URL } = process.env;
 
 // Generating Logs Middleware.
 class TerminalStream extends Writable {
@@ -60,7 +61,7 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useCreateIndex', true);
 
 mongoose
-  .connect(`mongodb://${host}/productsDB`, {
+  .connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 

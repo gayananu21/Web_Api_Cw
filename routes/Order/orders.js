@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
             description: order.description,
             imgUrl: order.imgUrl,
             orderId: uniqueOrderId,
-            status: 'processing',
+            status: 'Pending',
           });
 
           newOrder = newOrder.save();

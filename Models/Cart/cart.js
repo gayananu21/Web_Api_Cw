@@ -15,8 +15,8 @@ const cartSchema = new mongoose.Schema({
 
     type: String,
     required: [true, 'Description is required'],
-    minlength: [4, 'Description should contain atlease 4 characters'],
-    maxlength: [20, 'Description exceeded maximum number of characters'],
+    minlength: [10, 'Description should contain atlease 4 characters'],
+    maxlength: [200, 'Description exceeded maximum number of characters'],
 
   },
 

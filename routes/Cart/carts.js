@@ -74,7 +74,7 @@ router.post('/myCart', async (req, res) => {
     const product = await Cart.find({ userId: req.body.userId })
       .sort({ name: 'asc' })
       .select({
-        name: 1, likeCount: 1, _id: 1, imgUrl: 1, movies: 1,
+        name: 1, price: 1, _id: 1, imgUrl: 1, category: 1, description: 1,
       });
     return res.status(200).send(product);
   } catch (ex) {
@@ -86,7 +86,7 @@ router.post('/myCart', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const requstedID = req.params.id;
   try {
-    const product = await Cart.findById(requstedID);
+    const product = await Cart.find({ _id: requstedID });
     if (!product) {
       return res.status(404).send('Requested  Delete id not found');
     }
@@ -94,7 +94,7 @@ router.delete('/:id', async (req, res) => {
     return res.status(500).send('Error:', ex.message);
   }
 
-  const delProductCart = await product.deleteOne({ requstedID });
+  const delProductCart = await Cart.deleteOne({ _id: requstedID });
 
   return res.status(200).send(delProductCart);
 });
