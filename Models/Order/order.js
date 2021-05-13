@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Description is required'],
     minlength: [4, 'Description should contain atlease 4 characters'],
-    maxlength: [20, 'Description exceeded maximum number of characters'],
+    maxlength: [200, 'Description exceeded maximum number of characters'],
 
   },
 

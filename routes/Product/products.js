@@ -20,10 +20,31 @@ require('dotenv').config();
 const router = express.Router();
 const { SECRET_KEY } = process.env;
 
-// Get all products
+// Get all products admin
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find()
+      .sort({ name: 'asc' })
+      .select({
+        name: 1, description: 1, price: 1, _id: 1, imgUrl: 1, isAvailable: 1, category: 1,
+      });
+    if (!products) {
+      return res
+        .status(404)
+        .send('Requested  Updated id not found');
+    }
+    if (products) {
+      return res.status(200).send(products);
+    }
+  } catch (ex) {
+    return res.status(500).send('Error:', ex.message);
+  }
+});
+
+// Get all available products (USER)
+router.get('/available/', async (req, res) => {
+  try {
+    const products = await Product.find({ isAvailable: true })
       .sort({ name: 'asc' })
       .select({
         name: 1, description: 1, price: 1, _id: 1, imgUrl: 1, isAvailable: 1, category: 1,
@@ -230,7 +251,7 @@ router.put('/availablity/:id', async (req, res) => {
 });
 
 // Posting a new product(ADMIN)
-router.post('', addProductValidaion, async (req, res) => {
+router.post('/', addProductValidaion, async (req, res) => {
   if (!req.body) {
     // return res.status(400).send("Bad Request: Please add avenger name");
   }

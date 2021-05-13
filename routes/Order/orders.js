@@ -56,7 +56,8 @@ router.post('/', async (req, res) => {
   });
 
   // eslint-disable-next-line consistent-return
-  // Getting all unique the orders(Admin)
+
+  // Getting all  the orders(Admin)
   router.get('/', async (req, res) => {
     const token = req.header('token');
 
@@ -82,10 +83,28 @@ router.post('/', async (req, res) => {
     if (!orderProducts) {
       return res
         .status(404)
-        .send('Requested  order id not found');
+        .send('Requested  orders not found');
     }
     if (orderProducts) {
       return res.status(200).send(orderProducts);
+    }
+  } catch (ex) {
+    return res.status(500).send('Error:', ex.message);
+  }
+  });
+
+  // Get all user orders by userId
+  router.get('/:userId', async (req, res) => {
+    const requstedID = req.params.userId;
+    try {
+    const orders = await Order.find({ userId: requstedID }).distinct('orderId');
+    if (!orders) {
+      return res
+        .status(404)
+        .send('No current orders available');
+    }
+    if (orders) {
+      return res.status(200).send(orders);
     }
   } catch (ex) {
     return res.status(500).send('Error:', ex.message);
@@ -133,10 +152,10 @@ router.post('/', async (req, res) => {
   });
 
    // Get order details by order id of user(USER)
-   router.get('/:orderId', async (req, res) => {
+   router.get('/user/:orderId', async (req, res) => {
     const requstedID = req.params.orderId;
     try {
-    const orderProducts = await Order.find({ orderId: requstedID, userId: req.body.userId });
+    const orderProducts = await Order.find({ orderId: requstedID });
     if (!orderProducts) {
       return res
         .status(404)
