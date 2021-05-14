@@ -17,7 +17,6 @@ app.use(helmet());
 
 const morgan = require('morgan');
 const rt = require('file-stream-rotator');
-const { Writable } = require('stream');
 const products = require('./routes/Product/products');
 const home = require('./routes/Home/home');
 const users = require('./routes/Authentication/users');
@@ -30,15 +29,7 @@ const port = process.env.PORT;
 const host = process.env.HOST;
 const { MONGO_URL } = process.env;
 
-// Generating Logs Middleware.
-class TerminalStream extends Writable {
-  write(line) {
-    // here you send the log line to wherever you need
-   	 console.log('Logger:: ', line);
-  }
-}
-
-// Saving logs into seperate folders and rotate logs daily.
+// Generating Logs middleware and Saving logs into seperate folders and rotate logs daily.
 const fileWriter = rt.getStream({ filename: 'Middlewares/Logs/Error logs/errors.log', frequency: 'daily', verbose: true });
 const successWriter = rt.getStream({ filename: 'Middlewares/Logs/Success logs/success.log', frequency: 'daily', verbose: true });
 
@@ -60,19 +51,19 @@ app.use(morgan('combined', {
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useCreateIndex', true);
 
-/*mongoose
+/* mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 
   })
   */
- mongoose
-    .connect(`mongodb://localhost/productsDB`, { 
-        useNewUrlParser: true,
-        useUnifiedTopology: true 
+mongoose
+  .connect(`mongodb://localhost/productsDB`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 
-})
+  })
 
   .then(() => console.log('Connected to db successfully ...'.green))
   .catch((err) => console.log('Error has occured while connecting to db'.red, err));

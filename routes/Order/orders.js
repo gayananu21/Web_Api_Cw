@@ -241,41 +241,13 @@ router.post('/', async (req, res) => {
 
            res.status(200).send(orderProducts);
         } catch (err) {
-          for (name in err.errors) {
-            console.log(err.errors[name].message);
+          for (status in err.errors) {
+            console.log(err.errors[status].message);
             return res.status(400).json({
               success: false,
-              error: err.errors[name].message,
+              error: err.errors[status].message,
             });
-            // return res.status(400).send(err.errors[name].message);
-          }
-          for (description in err.errors) {
-            console.log(err.errors[description].message);
-            return res.status(400).json({
-              success: false,
-              error: err.errors[description].message,
-            });
-          }
-          for (category in err.errors) {
-            console.log(err.errors[category].message);
-            return res.status(400).json({
-              success: false,
-              error: err.errors[category].message,
-            });
-          }
-          for (price in err.errors) {
-            console.log(err.errors[price].message);
-            return res.status(400).json({
-              success: false,
-              error: err.errors[price].message,
-            });
-          }
-          for (isAvailable in err.errors) {
-            console.log(err.errors[isAvailable].message);
-            return res.status(400).json({
-              success: false,
-              error: err.errors[isAvailable].message,
-            });
+            // return res.status(400).send(err.errors[status].message);
           }
         }
   });

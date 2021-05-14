@@ -1,3 +1,5 @@
+/* eslint-disable no-global-assign */
+/* eslint-disable no-restricted-globals */
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-expressions */
@@ -82,6 +84,74 @@ router.post('/', addUserValidaion, async (req, res) => {
         error: err.errors[password].message,
       });
     }
+  }
+});
+
+// Get user details by user id
+router.get('/:id', async (req, res) => {
+  const requstedID = req.params.id;
+  try {
+    const user = await User.findById(requstedID)
+      .sort({ name: 'asc' })
+      .select({
+        userName: 1, email: 1,
+      });
+    if (!user) {
+      return res
+        .status(404)
+        .send('Requested  Updated id not found');
+    }
+    if (user) {
+      return res.status(200).send(user);
+    }
+  } catch (ex) {
+    return res.status(500).send('Error:', ex.message);
+  }
+});
+
+// Edit user details (email, passwords)
+router.put('/:id', async (req, res) => {
+  const requstedID = req.params.id;
+  try {
+    const userExit = await User.findById(requstedID)
+      .select({
+        userName: 1, email: 1,
+      });
+
+    if (!userExit) {
+      return res
+        .status(404)
+        .send('Requested  Updated id not found');
+    }
+
+    userExit.set({
+      userName: req.body.userName,
+      email: req.body.email,
+
+    });
+
+    try {
+      await userExit.save();
+
+      return res.status(200).send(userExit);
+    } catch (err) {
+      for (userName in err.errors) {
+        console.log(err.errors[userName].message);
+        return res.status(400).json({
+          success: false,
+          error: err.errors[userName].message,
+        });
+      }
+      for (email in err.errors) {
+        console.log(err.errors[email].message);
+        return res.status(400).json({
+          success: false,
+          error: err.errors[email].message,
+        });
+      }
+    }
+  } catch (ex) {
+    return res.status(500).send('Error:', ex.message);
   }
 });
 
