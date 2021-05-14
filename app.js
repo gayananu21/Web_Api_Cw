@@ -58,6 +58,7 @@ mongoose
 
   })
   /*
+  Local Mongo DB connection code
   mongoose
   .connect(`mongodb://localhost/productsDB`, {
     useNewUrlParser: true,
