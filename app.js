@@ -51,19 +51,20 @@ app.use(morgan('combined', {
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useCreateIndex', true);
 
-/* mongoose
+mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 
   })
-  */
-mongoose
+  /*
+  mongoose
   .connect(`mongodb://localhost/productsDB`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 
   })
+  */
 
   .then(() => console.log('Connected to db successfully ...'.green))
   .catch((err) => console.log('Error has occured while connecting to db'.red, err));
